@@ -1,76 +1,84 @@
-# 🌿 CareerMint — Professional Resume Builder
+# CareerMint – Professional Resume Builder
 
-**CareerMint** is a free, ATS-optimized resume builder with live preview, PDF & Word export, dark/light mode, and AI assistance.
+[![GitHub Stars](https://img.shields.io/badge/⭐-Star%20us-brightgreen)](https://github.com/malikmahmad/CareerMint)
 
----
+A modern, feature-rich resume builder that helps you create professional, ATS-optimized resumes in minutes. With live preview, multiple templates, and instant PDF/Word export—everything you need to land your dream job.
 
-## ✨ Features
+## ✨ Key Features
 
-- **Live Preview** — See your resume update in real-time as you type
-- **PDF Export** — Download a polished, ATS-friendly PDF
-- **Word Export** — Download an editable DOCX file
-- **6 Editable Sections** — Personal, Education, Experience, Projects, Skills, Additional Info
-- **AI Assistance** — Gemini-powered bullet point generation
-- **Dark / Light / System Theme** — Full theme toggle
-- **No Account Required** — Everything stored in your browser
-- **Fully Responsive** — Works on mobile, tablet, and desktop
+- **Live Preview**: See your resume update in real-time as you type
+- **Multiple Templates**: Choose from professional, modern, ATS-friendly, and executive templates
+- **Professional Formatting**: Built-in text formatting (bold, italic) for highlighted content
+- **One-Click Export**: Download as PDF or Word document instantly
+- **Clickable Links**: LinkedIn, GitHub, and Portfolio links are clickable in all formats
+- **ATS Optimized**: Designed to pass Applicant Tracking System filters
+- **Customizable Sections**: Personalize section names to match your preferences
+- **Dark/Light Theme**: Toggle between themes for comfortable viewing
+- **Responsive Design**: Works seamlessly on desktop and tablets
 
----
+## 🚀 Quick Start
 
-## 🚀 Getting Started
+### Prerequisites
+- Node.js 16+ and npm
 
-### 1. Install dependencies
+### Installation
+
 ```bash
-cd client
+# Clone the repository
+git clone https://github.com/malikmahmad/CareerMint.git
+cd CareerMint
+
+# Install dependencies
 npm install
-```
 
-### 2. Configure AI (optional)
-Create a `.env` file in the `client/` folder:
-```env
-VITE_API_KEY=your_gemini_api_key_here
-```
-Get your free API key at: https://aistudio.google.com/
-
-### 3. Run the development server
-```bash
+# Start development server
 npm run dev
 ```
 
-### 4. Build for production
+The app will open at `http://localhost:5173`
+
+## 📋 Supported Sections
+
+- **Personal Information** - Name, email, phone, location, and social profiles
+- **Professional Summary** - Brief overview of your background
+- **Education** - Degrees, institutions, GPA, and graduation dates
+- **Experience** - Job titles, companies, dates, and key responsibilities
+- **Projects** - Portfolio projects with descriptions and links
+- **Skills** - Frontend, backend, database, and other technical skills
+- **Additional** - Certifications, languages, awards, volunteering, interests
+
+## 🎨 Templates
+
+- **ATS Friendly** - Optimized for applicant tracking systems
+- **Modern** - Clean, contemporary design with green accent
+- **Professional** - Classic business resume style
+- **Executive** - Premium look with elegant formatting
+
+## 🛠 Tech Stack
+
+- **React** - UI library
+- **Vite** - Fast build tool
+- **TailwindCSS** - Utility-first styling
+- **React PDF** - PDF export functionality
+- **Radix UI** - Accessible component primitives
+- **Lucide Icons** - Beautiful icon set
+
+## 📦 Build for Production
+
 ```bash
 npm run build
 ```
 
----
+## 🤝 Contributing
 
-## 🌐 Deploy to Vercel
+Contributions are welcome! Feel free to submit issues and pull requests.
 
-1. Push to GitHub
-2. Import to Vercel
-3. Set `VITE_API_KEY` as an environment variable
-4. Deploy!
+## 📄 License
 
----
-
-## 🛠️ Tech Stack
-
-- **React 18** + **Vite**
-- **TailwindCSS** for utility styling
-- **@react-pdf/renderer** for PDF generation
-- **Radix UI** for accessible components
-- **Google Gemini AI** for content generation
-- **React Router** for navigation
+MIT License - feel free to use this project for personal or commercial purposes.
 
 ---
 
-## 👨‍💻 Developer
+### ❤️ If you love building amazing tools, **[star this repo](https://github.com/malikmahmad/CareerMint)** and show your support!
 
-Built by **Malik Muhammad Ahmad**
-
-- 🐙 GitHub: [github.com/malikmahmad](https://github.com/malikmahmad)
-- 💼 LinkedIn: [linkedin.com/in/malik-muhammad-ahmad-788b62338](https://www.linkedin.com/in/malik-muhammad-ahmad-788b62338)
-
----
-
-> © 2025 CareerMint. Free forever.
+**Built by** [Malik Muhammad Ahmad](https://linkedin.com/in/malik-muhammad-ahmad-788b62338) | [GitHub](https://github.com/malikmahmad) | [Portfolio](https://docuforge.live)
