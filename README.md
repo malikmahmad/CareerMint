@@ -79,6 +79,6 @@ MIT License - feel free to use this project for personal or commercial purposes.
 
 ---
 
-### ❤️ If you love building amazing tools, **[star this repo](https://github.com/malikmahmad/CareerMint)** and show your support!
+### 🩶 If you love building amazing tools, **[star this repo](https://github.com/malikmahmad/CareerMint)** and show your support!
 
-**Built by** [Malik Muhammad Ahmad](https://linkedin.com/in/malik-muhammad-ahmad-788b62338) | [GitHub](https://github.com/malikmahmad) | [Portfolio](https://docuforge.live)
+**Built with 🩶 by Malik Muhammad Ahmad** | [GitHub](https://github.com/malikmahmad) | [LinkedIn](https://www.linkedin.com/in/malik-muhammad-ahmad-788b62338)
