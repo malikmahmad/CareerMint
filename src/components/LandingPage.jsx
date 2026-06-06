@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import ThemeToggler from "./ThemeToggler/ThemeToggler";
 
-/* ─── SCROLL REVEAL HOOK ─── */
+// scroll reveal
 function useReveal() {
   const ref = useRef(null);
   useEffect(() => {
@@ -700,7 +700,7 @@ function Footer() {
           <div>
             <h4 className="font-display font-bold text-xs uppercase tracking-widest mb-5" style={{ color: "#22c55e" }}>Product</h4>
             <ul className="space-y-3">
-              {["Free Resume Builder","PDF Download","Word Download","ATS Optimization","AI Assistance","Live Preview"].map((item) => (
+              {["Free Resume Builder","PDF Download","Word Download","ATS Optimization","Live Preview","Dark Mode"].map((item) => (
                 <li key={item}><span className="text-sm" style={{ color: F2 }}>{item}</span></li>
               ))}
             </ul>
