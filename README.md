@@ -20,7 +20,6 @@
 <br/>
 
 [![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-careermint.me-22c55e?style=for-the-badge)](https://careermint.me)
-[![Vercel](https://img.shields.io/badge/▲_Vercel-careermint.vercel.app-000000?style=for-the-badge)](https://careermint.vercel.app)
 
 </div>
 
@@ -190,6 +189,6 @@ If CareerMint helped you land a job or saved you time, consider giving it a star
 
 <br/>
 
-🌐 **[careermint.me](https://careermint.me)** &nbsp;|&nbsp; **[careermint.vercel.app](https://careermint.vercel.app)**
+🌐 **[careermint.me](https://careermint.me)**
 
 </div>
