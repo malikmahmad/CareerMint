@@ -2,9 +2,9 @@ import { memo, useMemo, useState, useRef, useEffect } from "react";
 import { Download, FileText, File } from "lucide-react";
 import { Document, Page, Text, View, Link, pdf, StyleSheet } from "@react-pdf/renderer";
 
-// ═══════════════════════════════════════════════════════════════════════════════
+
 // TEMPLATE DEFINITIONS
-// ═══════════════════════════════════════════════════════════════════════════════
+
 
 const ACCENT_COLORS = {
   black: "#000000",
@@ -20,7 +20,7 @@ const TEMPLATES = {
     heading: { color: ACCENT_COLORS.darkgray, borderColor: ACCENT_COLORS.darkgray },
     spacing: { section: 16, entry: 10, item: 6 },
     showDivider: true,
-    dividerStyle: "line", // line or none
+    dividerStyle: "line", 
   },
   Modern: {
     accentColor: ACCENT_COLORS.darkgreen,
@@ -48,9 +48,9 @@ const TEMPLATES = {
   },
 };
 
-// ═══════════════════════════════════════════════════════════════════════════════
+
 // UTILITIES
-// ═══════════════════════════════════════════════════════════════════════════════
+
 
 const getTemplate = (templateName, accentColorKey) => {
   const template = { ...TEMPLATES[templateName] || TEMPLATES["ATS Friendly"] };
@@ -82,19 +82,19 @@ const parseBullets = (text) => {
     .map((l) => (l.startsWith("•") ? l.slice(1).trim() : l));
 };
 
-// Helper function to extract label and ensure URL is valid
+
 const getLinkInfo = (url) => {
   if (!url) return null;
   
   let label = "Link";
   let href = url;
   
-  // Add https if not present
+ 
   if (!href.startsWith("http://") && !href.startsWith("https://")) {
     href = "https://" + href;
   }
   
-  // Extract label from URL
+
   if (url.toLowerCase().includes("linkedin")) {
     label = "LinkedIn";
   } else if (url.toLowerCase().includes("github")) {
@@ -107,9 +107,9 @@ const getLinkInfo = (url) => {
   return { label, href };
 };
 
-// ═══════════════════════════════════════════════════════════════════════════════
+
 // HTML PREVIEW COMPONENT
-// ═══════════════════════════════════════════════════════════════════════════════
+
 
 const ResumeHTMLPreview = ({ userData, getFieldFormatting }) => {
   const formatting = userData.formatting || {
@@ -565,9 +565,9 @@ const ResumeHTMLPreview = ({ userData, getFieldFormatting }) => {
   );
 };
 
-// ═══════════════════════════════════════════════════════════════════════════════
+
 // PDF EXPORT COMPONENT
-// ═══════════════════════════════════════════════════════════════════════════════
+
 
 const ResumePDF = ({ userData, getFieldFormatting }) => {
   const formatting = userData.formatting || {
@@ -817,9 +817,9 @@ const ResumePDF = ({ userData, getFieldFormatting }) => {
   );
 };
 
-// ═══════════════════════════════════════════════════════════════════════════════
+
 // WORD EXPORT FUNCTION (RTF Format)
-// ═══════════════════════════════════════════════════════════════════════════════
+
 
 const generateWordDoc = (userData) => {
   const p = userData.personal || {};
@@ -960,9 +960,9 @@ const rtfEscape = (str) => {
     .replace(/[\u0100-\uffff]/g, (ch) => `\\u${ch.charCodeAt(0)}?`);
 };
 
-// ═══════════════════════════════════════════════════════════════════════════════
+
 // MAIN COMPONENT
-// ═══════════════════════════════════════════════════════════════════════════════
+
 
 const ResumePreview = memo(({ userData, getFieldFormatting, fullscreen = false }) => {
   const [downloading, setDownloading] = useState(null);
