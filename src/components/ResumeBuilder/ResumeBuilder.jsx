@@ -412,32 +412,6 @@ const ResumeBuilder = () => {
             </button>
 
             <button
-              onClick={() => setShowPreview(true)}
-              style={{
-                padding: "12px 24px",
-                borderRadius: 10,
-                border: "1.5px solid var(--border)",
-                background: "transparent",
-                color: "var(--text-primary)",
-                fontWeight: 600,
-                fontSize: 15,
-                fontFamily: "var(--font-body)",
-                cursor: "pointer",
-                transition: "all 0.2s",
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.background = "var(--bg-secondary)";
-                e.target.style.transform = "scale(1.02)";
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.background = "transparent";
-                e.target.style.transform = "scale(1)";
-              }}
-            >
-              ⬇️ Download Resume
-            </button>
-
-            <button
               onClick={() => setShouldShowAllDone(false)}
               style={{
                 padding: "12px 24px",
