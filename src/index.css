@@ -485,6 +485,19 @@ section {
   color: var(--text-muted);
 }
 
+/* Stats grid — 2×2 on mobile, 4-col on desktop */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(12px, 3vw, 32px);
+  padding: clamp(16px, 3vw, 36px) clamp(16px, 4vw, 48px);
+}
+@media (min-width: 640px) {
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .stat-number { font-size: 2rem; }
