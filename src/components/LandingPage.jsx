@@ -238,7 +238,7 @@ function Hero() {
           <div className="inline-flex items-center gap-2 mb-8 animate-fade-in-up">
             <span className="badge-green">
               <span className="w-2 h-2 rounded-full animate-pulse-green inline-block" style={{ background: "var(--accent)" }} />
-              AI-Powered Resume Builder
+              Free Resume Builder
             </span>
           </div>
 
@@ -362,9 +362,9 @@ function About() {
             },
             {
               ref: card3,
-              emoji: "🤖",
-              title: "AI-Powered Edge",
-              text: "Integrated Google Gemini AI helps you write compelling bullet points and summaries that get noticed by recruiters and ATS systems alike.",
+              emoji: "✨",
+              title: "Smart Templates",
+              text: "Choose from 12+ professionally designed templates optimized for different industries and career levels. Each one is tested with ATS systems.",
               color: "#15803d",
             },
           ].map((card, i) => (
@@ -399,7 +399,7 @@ const features = [
   { icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>, title: "PDF & Word Export", desc: "Download as polished PDF or editable DOCX — ready to send to any recruiter.", color: "#16a34a" },
   { icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>, title: "ATS Optimized", desc: "Clean, machine-readable formatting engineered to pass Applicant Tracking Systems.", color: "#15803d" },
   { icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>, title: "Fully Editable", desc: "Add, remove, or reorder sections — Personal, Education, Experience, Projects, Skills, and more.", color: "#4ade80" },
-  { icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>, title: "AI Assistance", desc: "Gemini-powered AI generates compelling bullet points and summaries for each section.", color: "#86efac" },
+  { icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v20M2 12h20M4.22 4.22l14.24 14.24M19.78 4.22L5.54 18.46"/></svg>, title: "Customizable Sections", desc: "Add unlimited custom sections beyond the standard ones. Certificates, languages, awards, portfolios — organize however you want.", color: "#86efac" },
   { icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>, title: "Multi-Device", desc: "Fully responsive split-panel interface — works seamlessly on desktop, tablet, and mobile.", color: "#34d399" },
 ];
 
@@ -568,7 +568,7 @@ function Privacy() {
     { icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>, title: "Data Storage", text: "All resume data is stored exclusively in your browser's local storage. We do not transmit, collect, or store any personal information on our servers." },
     { icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>, title: "No Tracking", text: "CareerMint does not use advertising trackers, third-party analytics, or behavioral profiling. Your browsing activity remains completely private." },
     { icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>, title: "No Account Required", text: "You never need to sign up or provide an email address. Your identity is completely anonymous when using CareerMint." },
-    { icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>, title: "AI Features", text: "Optional AI suggestions use the Google Gemini API. Prompts are sent securely to generate content — no personal data is retained by the AI service." },
+    { icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>, title: "No Third Parties", text: "We don't share your data with external services. Everything runs locally in your browser. Your resume belongs entirely to you." },
   ];
   return (
     <section id="privacy" className="py-24 relative" style={{ background: "var(--bg-secondary)" }}>
