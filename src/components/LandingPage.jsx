@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import ThemeToggler from "./ThemeToggler/ThemeToggler";
 
-// scroll reveal
+/* ─── SCROLL REVEAL HOOK ─── */
 function useReveal() {
   const ref = useRef(null);
   useEffect(() => {
@@ -274,7 +274,7 @@ function Hero() {
           {/* Subtext */}
           <p className="text-lg sm:text-xl max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in-up delay-200"
             style={{ color: "var(--text-secondary)" }}>
-            CareerMint helps you craft professionally designed,<br />ATS-friendly resumes with live preview and<br />instant PDF & Word export — completely free.
+            CareerMint helps you craft professionally designed, ATS-friendly resumes with live preview and instant PDF & Word export — completely free.
           </p>
 
           {/* CTA Buttons */}
@@ -296,14 +296,10 @@ function Hero() {
             </button>
           </div>
 
-          {/* Stats box — full width with internal grid, no overflow */}
+          {/* Stats box — responsive grid: 2 cols on mobile, 4 on desktop */}
           <div
-            className="animate-fade-in-up delay-400"
+            className="animate-fade-in-up delay-400 stats-grid"
             style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(4, 1fr)",
-              gap: "clamp(12px, 3vw, 32px)",
-              padding: "clamp(16px, 3vw, 36px) clamp(16px, 4vw, 48px)",
               borderRadius: 20,
               background: "var(--bg-card)",
               border: "1px solid var(--border)",
@@ -340,7 +336,7 @@ function About() {
             Built for <span className="gradient-text">Job Seekers</span>
           </h2>
           <p className="text-lg max-w-2xl mx-auto leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-            CareerMint was created with one mission:<br />make professional resume building accessible to<br />everyone — no design skills, no subscription, no frustration.
+            CareerMint was created with one mission: make professional resume building accessible to everyone — no design skills, no subscription, no frustration.
           </p>
         </div>
 
@@ -414,7 +410,7 @@ function Features() {
             Powerful Features,<br /><span className="gradient-text">Zero Complexity</span>
           </h2>
           <p className="text-lg max-w-2xl mx-auto" style={{ color: "var(--text-secondary)" }}>
-            Professional-grade tools in a<br />dead-simple interface. No learning curve,<br />no subscription.
+            Professional-grade tools in a dead-simple interface. No learning curve, no subscription.
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -455,7 +451,7 @@ function HowItWorks() {
             Ready in <span className="gradient-text">3 Easy Steps</span>
           </h2>
           <p className="text-lg max-w-xl mx-auto" style={{ color: "var(--text-secondary)" }}>
-            From blank page to job-ready resume<br />in under 5 minutes. Zero design<br />experience required.
+            From blank page to job-ready resume in under 5 minutes. Zero design experience required.
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-14">
@@ -700,7 +696,7 @@ function Footer() {
           <div>
             <h4 className="font-display font-bold text-xs uppercase tracking-widest mb-5" style={{ color: "#22c55e" }}>Product</h4>
             <ul className="space-y-3">
-              {["Free Resume Builder","PDF Download","Word Download","ATS Optimization","Live Preview","Dark Mode"].map((item) => (
+              {["Free Resume Builder","PDF Download","Word Download","ATS Optimization","AI Assistance","Live Preview"].map((item) => (
                 <li key={item}><span className="text-sm" style={{ color: F2 }}>{item}</span></li>
               ))}
             </ul>
