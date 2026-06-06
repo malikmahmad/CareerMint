@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import ResumeForm from "./ResumeForm";
 import ResumePreview from "./ResumePreview";
@@ -125,6 +125,50 @@ const ResumeBuilder = () => {
       }
     }
   }, []);
+
+  // Browser back behavior for overlays:
+  // Back closes Fullscreen Preview first, then All Done overlay.
+  // Only after both are closed, allow navigation to exit builder.
+  const didPushBackStateRef = useRef(false);
+  useEffect(() => {
+    const shouldIntercept = showFullscreenPreview || shouldShowAllDone;
+
+    if (shouldIntercept) {
+      if (!didPushBackStateRef.current) {
+        didPushBackStateRef.current = true;
+        // Push a history entry so browser back triggers popstate instead of leaving the route.
+        window.history.pushState({ careerMintBuilderOverlay: true }, "");
+      }
+
+      const onPopState = () => {
+        // Close in priority order: fullscreen preview -> all done overlay.
+        if (showFullscreenPreview) {
+          setShowFullscreenPreview(false);
+        } else if (shouldShowAllDone) {
+          setShouldShowAllDone(false);
+        }
+
+        // After closing overlays, allow the next back press to exit the builder.
+        if (!showFullscreenPreview && !shouldShowAllDone) {
+          didPushBackStateRef.current = false;
+        }
+
+        // If we still have an overlay open after handling, immediately keep the user on the page
+        // by pushing another state.
+        if (showFullscreenPreview || shouldShowAllDone) {
+          window.history.pushState({ careerMintBuilderOverlay: true }, "");
+        }
+      };
+
+      window.addEventListener("popstate", onPopState);
+      return () => window.removeEventListener("popstate", onPopState);
+    }
+
+    // No overlays open: reset ref so future overlay opens work correctly.
+    didPushBackStateRef.current = false;
+    return;
+  }, [showFullscreenPreview, shouldShowAllDone]);
+
 
   const updateBasicField = (section, fieldId, value) => {
     setUserData((prev) => ({
