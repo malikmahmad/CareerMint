@@ -54,6 +54,8 @@ const ResumeBuilder = () => {
   const navigate = useNavigate();
   const [isMobileView, setIsMobileView] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const [showFullscreenPreview, setShowFullscreenPreview] = useState(false);
+  const [shouldShowAllDone, setShouldShowAllDone] = useState(false);
   const [saved, setSaved] = useState(false);
   const [theme, setTheme] = useState(() => {
     const t = localStorage.getItem("careermint-theme");
@@ -212,6 +214,226 @@ const ResumeBuilder = () => {
     }
   };
 
+  // Check if resume has meaningful content
+  const hasContent = () => {
+    return (
+      userData.personal.name?.trim() &&
+      (userData.personal.email?.trim() || userData.personal.mobileNumber?.trim()) &&
+      (userData.education.some(e => e.collegeName?.trim()) ||
+       userData.experience.some(e => e.companyName?.trim()) ||
+       userData.projects.some(p => p.projectName?.trim()) ||
+       userData.skills.frontendSkills?.trim())
+    );
+  };
+
+  // Fullscreen preview modal component
+  const FullscreenPreview = () => {
+    return (
+      <div style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: "var(--bg)",
+        zIndex: 1000,
+        display: "flex",
+        flexDirection: "column",
+      }}>
+        {/* Header */}
+        <div style={{
+          height: 52,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "0 16px",
+          borderBottom: "1px solid var(--border)",
+          background: "var(--bg-card)",
+          flexShrink: 0,
+        }}>
+          <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 900, fontSize: 18, color: "var(--text-primary)", margin: 0 }}>
+            Resume Preview
+          </h2>
+          <button
+            onClick={() => setShowFullscreenPreview(false)}
+            style={{
+              padding: "6px 12px",
+              borderRadius: 8,
+              border: "1.5px solid var(--border)",
+              background: "transparent",
+              color: "var(--text-secondary)",
+              cursor: "pointer",
+              fontSize: "0.78rem",
+              fontWeight: 600,
+              fontFamily: "var(--font-body)",
+            }}
+          >
+            ← Back
+          </button>
+        </div>
+
+        {/* Resume content - full width */}
+        <div style={{ flex: 1, overflow: "auto", background: "var(--bg-secondary)" }}>
+          <div style={{ maxWidth: 900, margin: "40px auto", background: "var(--bg-card)", padding: 40, borderRadius: 12 }}>
+            <ResumePreview userData={userData} getFieldFormatting={getFieldFormatting} fullscreen={true} />
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // "All Done" screen
+  const AllDoneScreen = () => {
+    return (
+      <div style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: "linear-gradient(135deg, var(--bg), var(--bg-secondary))",
+        zIndex: 999,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backdropFilter: "blur(10px)",
+      }}>
+        <div style={{
+          background: "var(--bg-card)",
+          padding: 40,
+          borderRadius: 20,
+          maxWidth: 500,
+          textAlign: "center",
+          boxShadow: "var(--shadow-lg)",
+          border: "1px solid var(--border)",
+          animation: "slideUp 0.4s ease",
+        }}>
+          {/* Checkmark animation */}
+          <div style={{
+            width: 80,
+            height: 80,
+            background: "linear-gradient(135deg, var(--accent-dark), var(--accent-light))",
+            borderRadius: "50%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            margin: "0 auto 24px",
+            fontSize: 40,
+            animation: "popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
+          }}>
+            ✓
+          </div>
+
+          <h1 style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 900,
+            fontSize: 32,
+            color: "var(--text-primary)",
+            margin: "0 0 12px 0",
+          }}>
+            All Done!
+          </h1>
+
+          <p style={{
+            fontSize: 16,
+            color: "var(--text-secondary)",
+            margin: "0 0 32px 0",
+            lineHeight: 1.6,
+          }}>
+            Your resume is ready. Preview it below or download as PDF/Word to get started with your job search.
+          </p>
+
+          {/* Action buttons */}
+          <div style={{ display: "flex", gap: 12, flexDirection: "column" }}>
+            <button
+              onClick={() => {
+                setShowFullscreenPreview(true);
+              }}
+              style={{
+                padding: "12px 24px",
+                borderRadius: 10,
+                border: "none",
+                background: "linear-gradient(135deg, var(--accent-dark), var(--accent))",
+                color: "white",
+                fontWeight: 600,
+                fontSize: 15,
+                fontFamily: "var(--font-body)",
+                cursor: "pointer",
+                transition: "transform 0.2s",
+              }}
+              onMouseEnter={(e) => e.target.style.transform = "scale(1.02)"}
+              onMouseLeave={(e) => e.target.style.transform = "scale(1)"}
+            >
+              👁️ Preview Full Resume
+            </button>
+
+            <button
+              onClick={() => setShowPreview(true)}
+              style={{
+                padding: "12px 24px",
+                borderRadius: 10,
+                border: "1.5px solid var(--border)",
+                background: "transparent",
+                color: "var(--text-primary)",
+                fontWeight: 600,
+                fontSize: 15,
+                fontFamily: "var(--font-body)",
+                cursor: "pointer",
+                transition: "all 0.2s",
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = "var(--bg-secondary)";
+                e.target.style.transform = "scale(1.02)";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = "transparent";
+                e.target.style.transform = "scale(1)";
+              }}
+            >
+              ⬇️ Download Resume
+            </button>
+
+            <button
+              onClick={() => setShouldShowAllDone(false)}
+              style={{
+                padding: "12px 24px",
+                borderRadius: 10,
+                border: "1.5px solid var(--border)",
+                background: "transparent",
+                color: "var(--text-secondary)",
+                fontWeight: 600,
+                fontSize: 15,
+                fontFamily: "var(--font-body)",
+                cursor: "pointer",
+                transition: "all 0.2s",
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = "var(--bg-secondary)";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = "transparent";
+              }}
+            >
+              ← Continue Editing
+            </button>
+          </div>
+
+          <style>{`
+            @keyframes popIn {
+              0% { transform: scale(0); opacity: 0; }
+              50% { transform: scale(1.1); }
+              100% { transform: scale(1); opacity: 1; }
+            }
+            @keyframes slideUp {
+              0% { transform: translateY(30px); opacity: 0; }
+              100% { transform: translateY(0); opacity: 1; }
+            }
+          `}</style>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div
       style={{
@@ -222,6 +444,12 @@ const ResumeBuilder = () => {
         fontFamily: "var(--font-body)",
       }}
     >
+      {/* Fullscreen Preview Modal */}
+      {showFullscreenPreview && <FullscreenPreview />}
+
+      {/* All Done Screen */}
+      {shouldShowAllDone && <AllDoneScreen />}
+
       {/* Top Bar */}
       <div
         style={{
@@ -333,6 +561,30 @@ const ResumeBuilder = () => {
             >
               ✓ Saved
             </span>
+          )}
+          {hasContent() && (
+            <button
+              onClick={() => setShouldShowAllDone(true)}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 4,
+                padding: "6px 12px",
+                borderRadius: 8,
+                background: "linear-gradient(135deg, var(--accent-dark), var(--accent))",
+                color: "white",
+                cursor: "pointer",
+                fontSize: "0.78rem",
+                fontWeight: 600,
+                fontFamily: "var(--font-body)",
+                border: "none",
+                transition: "transform 0.2s",
+              }}
+              onMouseEnter={(e) => e.target.style.transform = "scale(1.05)"}
+              onMouseLeave={(e) => e.target.style.transform = "scale(1)"}
+            >
+              ✓ All Done
+            </button>
           )}
           <ThemeToggler theme={theme} setTheme={setTheme} />
           <button

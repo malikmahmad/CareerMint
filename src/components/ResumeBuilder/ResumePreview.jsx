@@ -964,7 +964,7 @@ const rtfEscape = (str) => {
 // MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════════
 
-const ResumePreview = memo(({ userData, getFieldFormatting }) => {
+const ResumePreview = memo(({ userData, getFieldFormatting, fullscreen = false }) => {
   const [downloading, setDownloading] = useState(null);
   const previewRef = useRef(null);
 
@@ -1059,57 +1059,59 @@ const ResumePreview = memo(({ userData, getFieldFormatting }) => {
         overflow: "hidden",
       }}
     >
-      {/* Toolbar */}
-      <div
-        style={{
-          padding: "12px 16px",
-          borderBottom: "1px solid var(--border)",
-          background: "var(--bg-card)",
-          display: "flex",
-          gap: 8,
-        }}
-      >
-        <button
-          onClick={downloadPDF}
-          disabled={downloading === "pdf"}
+      {/* Toolbar - hidden in fullscreen */}
+      {!fullscreen && (
+        <div
           style={{
+            padding: "12px 16px",
+            borderBottom: "1px solid var(--border)",
+            background: "var(--bg-card)",
             display: "flex",
-            alignItems: "center",
-            gap: 6,
-            padding: "8px 12px",
-            borderRadius: 6,
-            border: "1px solid var(--border)",
-            background: "var(--bg)",
-            color: "var(--text-primary)",
-            cursor: "pointer",
-            fontSize: "0.875rem",
-            fontFamily: "var(--font-body)",
-            opacity: downloading === "pdf" ? 0.6 : 1,
+            gap: 8,
           }}
         >
-          <FileText size={16} /> {downloading === "pdf" ? "Exporting..." : "Download PDF"}
-        </button>
-        <button
-          onClick={downloadWord}
-          disabled={downloading === "word"}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 6,
-            padding: "8px 12px",
-            borderRadius: 6,
-            border: "1px solid var(--border)",
-            background: "var(--bg)",
-            color: "var(--text-primary)",
-            cursor: "pointer",
-            fontSize: "0.875rem",
-            fontFamily: "var(--font-body)",
-            opacity: downloading === "word" ? 0.6 : 1,
-          }}
-        >
-          <File size={16} /> {downloading === "word" ? "Exporting..." : "Download DOCX"}
-        </button>
-      </div>
+          <button
+            onClick={downloadPDF}
+            disabled={downloading === "pdf"}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "8px 12px",
+              borderRadius: 6,
+              border: "1px solid var(--border)",
+              background: "var(--bg)",
+              color: "var(--text-primary)",
+              cursor: "pointer",
+              fontSize: "0.875rem",
+              fontFamily: "var(--font-body)",
+              opacity: downloading === "pdf" ? 0.6 : 1,
+            }}
+          >
+            <FileText size={16} /> {downloading === "pdf" ? "Exporting..." : "Download PDF"}
+          </button>
+          <button
+            onClick={downloadWord}
+            disabled={downloading === "word"}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "8px 12px",
+              borderRadius: 6,
+              border: "1px solid var(--border)",
+              background: "var(--bg)",
+              color: "var(--text-primary)",
+              cursor: "pointer",
+              fontSize: "0.875rem",
+              fontFamily: "var(--font-body)",
+              opacity: downloading === "word" ? 0.6 : 1,
+            }}
+          >
+            <File size={16} /> {downloading === "word" ? "Exporting..." : "Download DOCX"}
+          </button>
+        </div>
+      )}
 
       {/* Preview */}
       <div
@@ -1117,8 +1119,8 @@ const ResumePreview = memo(({ userData, getFieldFormatting }) => {
         style={{
           flex: 1,
           overflowY: "auto",
-          background: "#f5f5f5",
-          padding: "16px",
+          background: fullscreen ? "var(--bg-secondary)" : "#f5f5f5",
+          padding: fullscreen ? 0 : "16px",
         }}
       >
         <ResumeHTMLPreview userData={userData} getFieldFormatting={getFieldFormatting} />
