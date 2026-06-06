@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/malikmahmad/CareerMint/main/public/careermint_banner.png" alt="CareerMint Banner" width="100%" />
+<img src="https://raw.githubusercontent.com/malikmahmad/CareerMint/master/public/careermint_banner.png" alt="CareerMint Banner" width="100%" />
 
 <br/>
 <br/>
@@ -28,7 +28,7 @@
 
 ## 📸 Preview
 
-<img src="https://raw.githubusercontent.com/malikmahmad/CareerMint/main/public/careermint_preview.png" alt="CareerMint App Preview" width="100%" style="border-radius: 12px;" />
+<img src="https://raw.githubusercontent.com/malikmahmad/CareerMint/master/public/careermint_preview.png" alt="CareerMint App Preview" width="100%" style="border-radius: 12px;" />
 
 ---
 
