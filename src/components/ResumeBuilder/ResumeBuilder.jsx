@@ -5,13 +5,11 @@ import ResumePreview from "./ResumePreview";
 import ThemeToggler from "../ThemeToggler/ThemeToggler";
 
 const DEFAULT_STATE = {
-  // Global formatting options
   formatting: {
-    fontFamily: "Arial", // Arial, Times New Roman, Calibri, Georgia
-    template: "ATS Friendly", // ATS Friendly, Modern, Professional, Executive
-    accentColor: "darkgreen", // black, navy, darkgreen, darkgray
+    fontFamily: "Arial",
+    template: "ATS Friendly",
+    accentColor: "darkgreen",
   },
-  // Field-level formatting (stores bold/italic for each field)
   fieldFormatting: {},
   sectionNames: {
     personal: "Personal",
@@ -59,15 +57,52 @@ const ResumeBuilder = () => {
   const [saved, setSaved] = useState(false);
   const [theme, setTheme] = useState(() => {
     const t = localStorage.getItem("careermint-theme");
-    // If stored theme exists, return it
-    if (t) return t;
-    // Otherwise default to "system" so OS preference is used
-    return "system";
+    return t || "system";
   });
 
   const [userData, setUserData] = useState(DEFAULT_STATE);
 
-  // Get actual theme value (resolve "system" to "dark" or "light")
+  // Load session draft on mount
+  useEffect(() => {
+    const draft = sessionStorage.getItem("careermint-draft");
+    if (draft) {
+      try {
+        const parsed = JSON.parse(draft);
+        setUserData({
+          ...DEFAULT_STATE,
+          ...parsed,
+          personal: { ...DEFAULT_STATE.personal, ...(parsed.personal || {}) },
+          skills: { ...DEFAULT_STATE.skills, ...(parsed.skills || {}) },
+          additional: { ...DEFAULT_STATE.additional, ...(parsed.additional || {}) },
+          education:
+            Array.isArray(parsed.education) && parsed.education.length > 0
+              ? parsed.education
+              : DEFAULT_STATE.education,
+          experience:
+            Array.isArray(parsed.experience) && parsed.experience.length > 0
+              ? parsed.experience
+              : DEFAULT_STATE.experience,
+          projects:
+            Array.isArray(parsed.projects) && parsed.projects.length > 0
+              ? parsed.projects
+              : DEFAULT_STATE.projects,
+        });
+      } catch (e) {
+        console.error("Error loading session draft:", e);
+      }
+    }
+  }, []);
+
+  // Clear draft on tab/window close
+  useEffect(() => {
+    const clearOnUnload = () => {
+      sessionStorage.removeItem("careermint-draft");
+    };
+    window.addEventListener("beforeunload", clearOnUnload);
+    return () => window.removeEventListener("beforeunload", clearOnUnload);
+  }, []);
+
+  // Resolve "system" theme to actual light/dark
   const getActualTheme = (themeValue) => {
     if (themeValue === "system") {
       return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
@@ -81,11 +116,10 @@ const ResumeBuilder = () => {
     document.documentElement.setAttribute("data-theme", actualTheme);
     localStorage.setItem("careermint-theme", theme);
 
-    // If in system mode, listen for OS preference changes
     if (theme === "system") {
       const mq = window.matchMedia("(prefers-color-scheme: dark)");
       const handler = () => {
-        const newActual = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        const newActual = mq.matches ? "dark" : "light";
         document.documentElement.setAttribute("data-theme", newActual);
       };
       mq.addEventListener("change", handler);
@@ -93,7 +127,7 @@ const ResumeBuilder = () => {
     }
   }, [theme]);
 
-  // Screen size
+  // Screen size detection
   useEffect(() => {
     const check = () => setIsMobileView(window.innerWidth < 768);
     check();
@@ -101,34 +135,7 @@ const ResumeBuilder = () => {
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  // Load draft
-  useEffect(() => {
-    const saved = localStorage.getItem("careermint-draft");
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        setUserData({
-          ...DEFAULT_STATE,
-          ...parsed,
-          personal: { ...DEFAULT_STATE.personal, ...(parsed.personal || {}) },
-          skills: { ...DEFAULT_STATE.skills, ...(parsed.skills || {}) },
-          additional: { ...DEFAULT_STATE.additional, ...(parsed.additional || {}) },
-          education: Array.isArray(parsed.education) && parsed.education.length > 0
-            ? parsed.education : DEFAULT_STATE.education,
-          experience: Array.isArray(parsed.experience) && parsed.experience.length > 0
-            ? parsed.experience : DEFAULT_STATE.experience,
-          projects: Array.isArray(parsed.projects) && parsed.projects.length > 0
-            ? parsed.projects : DEFAULT_STATE.projects,
-        });
-      } catch (e) {
-        console.error("Error loading draft:", e);
-      }
-    }
-  }, []);
-
-  // Browser back behavior for overlays:
-  // Back closes Fullscreen Preview first, then All Done overlay.
-  // Only after both are closed, allow navigation to exit builder.
+  // Browser back behavior for overlays
   const didPushBackStateRef = useRef(false);
   useEffect(() => {
     const shouldIntercept = showFullscreenPreview || shouldShowAllDone;
@@ -136,25 +143,20 @@ const ResumeBuilder = () => {
     if (shouldIntercept) {
       if (!didPushBackStateRef.current) {
         didPushBackStateRef.current = true;
-        // Push a history entry so browser back triggers popstate instead of leaving the route.
         window.history.pushState({ careerMintBuilderOverlay: true }, "");
       }
 
       const onPopState = () => {
-        // Close in priority order: fullscreen preview -> all done overlay.
         if (showFullscreenPreview) {
           setShowFullscreenPreview(false);
         } else if (shouldShowAllDone) {
           setShouldShowAllDone(false);
         }
 
-        // After closing overlays, allow the next back press to exit the builder.
         if (!showFullscreenPreview && !shouldShowAllDone) {
           didPushBackStateRef.current = false;
         }
 
-        // If we still have an overlay open after handling, immediately keep the user on the page
-        // by pushing another state.
         if (showFullscreenPreview || shouldShowAllDone) {
           window.history.pushState({ careerMintBuilderOverlay: true }, "");
         }
@@ -164,11 +166,8 @@ const ResumeBuilder = () => {
       return () => window.removeEventListener("popstate", onPopState);
     }
 
-    // No overlays open: reset ref so future overlay opens work correctly.
     didPushBackStateRef.current = false;
-    return;
   }, [showFullscreenPreview, shouldShowAllDone]);
-
 
   const updateBasicField = (section, fieldId, value) => {
     setUserData((prev) => ({
@@ -189,8 +188,10 @@ const ResumeBuilder = () => {
   const addNewEntry = (section) => {
     setUserData((prev) => {
       if (!Array.isArray(prev[section])) return prev;
-      const newId = prev[section].length > 0
-        ? Math.max(...prev[section].map((i) => i.id || 0)) + 1 : 0;
+      const newId =
+        prev[section].length > 0
+          ? Math.max(...prev[section].map((i) => i.id || 0)) + 1
+          : 0;
 
       const templates = {
         education: { id: newId, collegeName: "", course: "", eduFrom: "", eduTo: "", gpa: "" },
@@ -250,7 +251,7 @@ const ResumeBuilder = () => {
 
   const saveDraft = () => {
     try {
-      localStorage.setItem("careermint-draft", JSON.stringify(userData));
+      sessionStorage.setItem("careermint-draft", JSON.stringify(userData));
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
     } catch (e) {
@@ -258,44 +259,53 @@ const ResumeBuilder = () => {
     }
   };
 
-  // Check if resume has meaningful content
   const hasContent = () => {
     return (
       userData.personal.name?.trim() &&
       (userData.personal.email?.trim() || userData.personal.mobileNumber?.trim()) &&
-      (userData.education.some(e => e.collegeName?.trim()) ||
-       userData.experience.some(e => e.companyName?.trim()) ||
-       userData.projects.some(p => p.projectName?.trim()) ||
-       userData.skills.frontendSkills?.trim())
+      (userData.education.some((e) => e.collegeName?.trim()) ||
+        userData.experience.some((e) => e.companyName?.trim()) ||
+        userData.projects.some((p) => p.projectName?.trim()) ||
+        userData.skills.frontendSkills?.trim())
     );
   };
 
-  // Fullscreen preview modal component
   const FullscreenPreview = () => {
     return (
-      <div style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: "var(--bg)",
-        zIndex: 1000,
-        display: "flex",
-        flexDirection: "column",
-      }}>
-        {/* Header */}
-        <div style={{
-          height: 52,
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: "var(--bg)",
+          zIndex: 1000,
           display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 16px",
-          borderBottom: "1px solid var(--border)",
-          background: "var(--bg-card)",
-          flexShrink: 0,
-        }}>
-          <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 900, fontSize: 18, color: "var(--text-primary)", margin: 0 }}>
+          flexDirection: "column",
+        }}
+      >
+        <div
+          style={{
+            height: 52,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "0 16px",
+            borderBottom: "1px solid var(--border)",
+            background: "var(--bg-card)",
+            flexShrink: 0,
+          }}
+        >
+          <h2
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 900,
+              fontSize: 18,
+              color: "var(--text-primary)",
+              margin: 0,
+            }}
+          >
             Resume Preview
           </h2>
           <button
@@ -315,84 +325,97 @@ const ResumeBuilder = () => {
             ← Back
           </button>
         </div>
-
-        {/* Resume content - full width */}
         <div style={{ flex: 1, overflow: "auto", background: "var(--bg-secondary)" }}>
-          <div style={{ maxWidth: 900, margin: "40px auto", background: "var(--bg-card)", padding: 40, borderRadius: 12 }}>
-            <ResumePreview userData={userData} getFieldFormatting={getFieldFormatting} fullscreen={true} />
+          <div
+            style={{
+              maxWidth: 900,
+              margin: "40px auto",
+              background: "var(--bg-card)",
+              padding: 40,
+              borderRadius: 12,
+            }}
+          >
+            <ResumePreview
+              userData={userData}
+              getFieldFormatting={getFieldFormatting}
+              fullscreen={true}
+            />
           </div>
         </div>
       </div>
     );
   };
 
-  // "All Done" screen
   const AllDoneScreen = () => {
     return (
-      <div style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: "linear-gradient(135deg, var(--bg), var(--bg-secondary))",
-        zIndex: 999,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        backdropFilter: "blur(10px)",
-      }}>
-        <div style={{
-          background: "var(--bg-card)",
-          padding: 40,
-          borderRadius: 20,
-          maxWidth: 500,
-          textAlign: "center",
-          boxShadow: "var(--shadow-lg)",
-          border: "1px solid var(--border)",
-          animation: "slideUp 0.4s ease",
-        }}>
-          {/* Checkmark animation */}
-          <div style={{
-            width: 80,
-            height: 80,
-            background: "linear-gradient(135deg, var(--accent-dark), var(--accent-light))",
-            borderRadius: "50%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            margin: "0 auto 24px",
-            fontSize: 40,
-            animation: "popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
-          }}>
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: "linear-gradient(135deg, var(--bg), var(--bg-secondary))",
+          zIndex: 999,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backdropFilter: "blur(10px)",
+        }}
+      >
+        <div
+          style={{
+            background: "var(--bg-card)",
+            padding: 40,
+            borderRadius: 20,
+            maxWidth: 500,
+            textAlign: "center",
+            boxShadow: "var(--shadow-lg)",
+            border: "1px solid var(--border)",
+            animation: "slideUp 0.4s ease",
+          }}
+        >
+          <div
+            style={{
+              width: 80,
+              height: 80,
+              background: "linear-gradient(135deg, var(--accent-dark), var(--accent-light))",
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              margin: "0 auto 24px",
+              fontSize: 40,
+              animation: "popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
+            }}
+          >
             ✓
           </div>
-
-          <h1 style={{
-            fontFamily: "var(--font-display)",
-            fontWeight: 900,
-            fontSize: 32,
-            color: "var(--text-primary)",
-            margin: "0 0 12px 0",
-          }}>
+          <h1
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 900,
+              fontSize: 32,
+              color: "var(--text-primary)",
+              margin: "0 0 12px 0",
+            }}
+          >
             All Done!
           </h1>
-
-          <p style={{
-            fontSize: 16,
-            color: "var(--text-secondary)",
-            margin: "0 0 32px 0",
-            lineHeight: 1.6,
-          }}>
-            Your resume is ready. Preview it below or download as PDF/Word to get started with your job search.
+          <p
+            style={{
+              fontSize: 16,
+              color: "var(--text-secondary)",
+              margin: "0 0 32px 0",
+              lineHeight: 1.6,
+            }}
+          >
+            Your resume is ready. Preview it below or download as PDF/Word to get started with
+            your job search.
           </p>
-
-          {/* Action buttons */}
           <div style={{ display: "flex", gap: 12, flexDirection: "column" }}>
             <button
-              onClick={() => {
-                setShowFullscreenPreview(true);
-              }}
+              onClick={() => setShowFullscreenPreview(true)}
               style={{
                 padding: "12px 24px",
                 borderRadius: 10,
@@ -405,12 +428,11 @@ const ResumeBuilder = () => {
                 cursor: "pointer",
                 transition: "transform 0.2s",
               }}
-              onMouseEnter={(e) => e.target.style.transform = "scale(1.02)"}
-              onMouseLeave={(e) => e.target.style.transform = "scale(1)"}
+              onMouseEnter={(e) => (e.target.style.transform = "scale(1.02)")}
+              onMouseLeave={(e) => (e.target.style.transform = "scale(1)")}
             >
               👁️ Preview Full Resume
             </button>
-
             <button
               onClick={() => setShouldShowAllDone(false)}
               style={{
@@ -425,17 +447,12 @@ const ResumeBuilder = () => {
                 cursor: "pointer",
                 transition: "all 0.2s",
               }}
-              onMouseEnter={(e) => {
-                e.target.style.background = "var(--bg-secondary)";
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.background = "transparent";
-              }}
+              onMouseEnter={(e) => (e.target.style.background = "var(--bg-secondary)")}
+              onMouseLeave={(e) => (e.target.style.background = "transparent")}
             >
               ← Continue Editing
             </button>
           </div>
-
           <style>{`
             @keyframes popIn {
               0% { transform: scale(0); opacity: 0; }
@@ -462,10 +479,7 @@ const ResumeBuilder = () => {
         fontFamily: "var(--font-body)",
       }}
     >
-      {/* Fullscreen Preview Modal */}
       {showFullscreenPreview && <FullscreenPreview />}
-
-      {/* All Done Screen */}
       {shouldShowAllDone && <AllDoneScreen />}
 
       {/* Top Bar */}
@@ -482,7 +496,6 @@ const ResumeBuilder = () => {
           zIndex: 20,
         }}
       >
-        {/* Logo */}
         <button
           onClick={() => navigate("/")}
           style={{
@@ -524,7 +537,6 @@ const ResumeBuilder = () => {
           </span>
         </button>
 
-        {/* Center: mobile toggle */}
         {isMobileView && (
           <div
             style={{
@@ -544,9 +556,7 @@ const ResumeBuilder = () => {
                   borderRadius: 6,
                   border: "none",
                   background:
-                    (label === "Preview") === showPreview
-                      ? "var(--accent)"
-                      : "transparent",
+                    (label === "Preview") === showPreview ? "var(--accent)" : "transparent",
                   color:
                     (label === "Preview") === showPreview ? "white" : "var(--text-secondary)",
                   cursor: "pointer",
@@ -562,7 +572,6 @@ const ResumeBuilder = () => {
           </div>
         )}
 
-        {/* Right actions */}
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           {saved && (
             <span
@@ -598,8 +607,8 @@ const ResumeBuilder = () => {
                 border: "none",
                 transition: "transform 0.2s",
               }}
-              onMouseEnter={(e) => e.target.style.transform = "scale(1.05)"}
-              onMouseLeave={(e) => e.target.style.transform = "scale(1)"}
+              onMouseEnter={(e) => (e.target.style.transform = "scale(1.05)")}
+              onMouseLeave={(e) => (e.target.style.transform = "scale(1)")}
             >
               ✓ All Done
             </button>
@@ -629,7 +638,6 @@ const ResumeBuilder = () => {
 
       {/* Main Content */}
       <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
-        {/* Form Panel */}
         <div
           style={{
             width: isMobileView ? "100%" : "45%",
@@ -653,8 +661,6 @@ const ResumeBuilder = () => {
             isMobileView={isMobileView}
           />
         </div>
-
-        {/* Preview Panel */}
         <div
           style={{
             width: isMobileView ? "100%" : "55%",
